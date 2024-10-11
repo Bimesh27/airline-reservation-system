@@ -2,23 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Aeroplane capacity, no of seats in other words
+// Aeroplane gi sheet ki masing, mi kym channi, khotni
 const int CAPACITY = 102;
 
+//sina passenger gi details amam amam sum ibadi nungaitena structure(struct) amada oina punsille
 typedef struct Passenger {
     char name[50];
     char email[50];
     char password[20];
     char destination[20];
-    char seatNumber[3]; // e.g., "A1", "B2", size three because I need to store null terminator
+    char seatNumber[3]; // 
 } Passenger;
 
+//sina reserveTwbagi linkList , masigi list sida ywdoise passengerGi details ka mathangi haidi magi hak matungda reserver twba list tugi memory address ka;
 typedef struct ReservationNode {
-    Passenger passenger; // this holds the passenger information
-    struct ReservationNode* next; // this points to the next reservation node in the linked list
-} ReservationNode;
+    Passenger passenger; // sina passenger gi details ni
+    struct ReservationNode* next; // aduga sina magihek mathngda reserve twrkpa list tugi location
+} ReservationNode; // maming (typedef digi matengna)
 
-// Function to look fancy haha not so imp
+// sina hek chngbada thagada wahei khra phajanaba yengbada, explain twbagi mathw tade sidi, this fucntion will call later in the main function ======================
 void displayHeader() {
     printf("\n***************************************************");
     printf("\n\t     Welcome to Nielit Airline");
@@ -26,23 +28,21 @@ void displayHeader() {
     printf("\n***************************************************");
 }
 
-// Function to check the available seats ==============================
+// sina eikhoina book/reserve twgadba seat keido hanna available oibra oidabra yengba, oirgadi seat no thokni haidi A1, B1 oidragana x thokkani
 void displayAvailableSeats(int* seats) {
     printf("     x means taken\n");
     printf("------------------------\n");
-    for (int i = 0; i < CAPACITY; i++) {
-        char row = 'A' + (i / 6);  // Determine the row (A, B, C, etc.)
-        int col = (i % 6) + 1;     // Determine the seat number in that row using remainder formula
-        if (seats[i] == 0) { // 0 means the seat is available
-            // Print the seat in the same row on the same line
-            printf(" %c%d ", row, col);
-            // After printing 6 seats (one row), start a new line
+    for (int i = 0; i < CAPACITY; i++) { // sina seat mymdo print twnaba loop chatlaga oina twre, heitrasu heiba manaba, loop se capacity buk ne run twdoise haidi 102 seats masingdo
+        char row = 'A' + (i / 6);  //aduga sina row no do update twnana A gi value se 65 neba integer dadi 66 hek yabada B ondoine adunane i / 6 haise, eg. oins hairabada ahanbada i se 1 ne na khallo 1/6 ti 0.45 ra keinoma taramni adubu int oiba nina 0 oina lwni aduga i sina 6 hek oibada 1+ twraga B ondoine
+        int col = (i % 6) + 1;     // sigi co gise kok kharadi ngaobne haidi i se 0 nena twro 0 % 6 ti 1 tai , formuladune "remainder=dividend−(divisor×quotient)" sigi formula se paliniko
+
+        if (seats[i] == 0) { // sina seat he hangbra yengine ahanbada seats loinabkki value se 0 loi lei, marmdi eina main fucntion da calloc sijinaraga memory allocate twbanina, calloc sizinaradi 0 da initialized loi twdoine, 0 leiraga hangge, 1 keigumba leiradi mina book twgre hangdre hairini
+            printf(" %c%d ", row, col); //sina seat printtwba c sina A(row), d sina(col);
         } else {
-            // If the seat is taken, print a placeholder
-            printf("  x "); // This will print three spaces for better formatting
+            printf("  x "); // sina keigumba seat to mina hanna book twramadi x oina print twrakani
         }
         if (col == 6) {
-            printf("\n");
+            printf("\n"); // sidi eina kok ngaodana hpsilbne haidi row amam2 oina namnaba A gina firstline da B gina tonganba line amada, row amada col 6 hek subada anouba line ama hwgrani
         }
     }
 }
@@ -208,42 +208,42 @@ void displayMyReservation(ReservationNode* head) {
 
 // Function to display the menu and choose ==========================
 void displayMenu(int* seats, ReservationNode* head) {
-    int choice = 0;
+    int choice = 0; // sina choice user na khangadba, eina 0 na initialized twrisina global variable oidabnina twda yadbeine, twningbabudi ntte haha;
 
-    while (choice != 6) {
+    while (choice != 6) { // sigi while loop se choice se 6 ka manadribuk cttoine, marmdi 6 ti exit nina
         char* choices[] = {"Register a Passenger", "Available Seats", "Cancel a Reservation",
-                           "Display all Reservations (admin Only)", "Display my Reservation", "Exit"};
+                           "Display all Reservations (admin Only)", "Display my Reservation", "Exit"}; // sisu eina choice mymdo string gi array amada tungsnle, loop ctlaga print twge twbne heiba mannaba;
         printf("\nChoose an option to continue 1 - 6\n");
 
         for (int i = 0; i < 6; i++) {
-            printf("%d. %s \n", i + 1, choices[i]);
+            printf("%d. %s \n", i + 1, choices[i]); // loop ctlaga 1.Register sumaina printtwrknabe %d%s haisina , i + 1 sidi 0 dagi hwbado nungaitena twbne 1 dagi hwnaba;
         }
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
-        printf("\n***************************************************\n");
-
-        switch (choice) {
+        printf("\n***************************************************\n"); //phajanaba thok thak ni sina;
+        
+        switch (choice) { //switch case twraga choice khanhalle
             case 1:
-                head = registerPassenger(seats, head);
-                break;
+                head = registerPassenger(seats, head); //keigumba sigi fucntion se khanlakadi sigi fucntion se call twduini, eina head ta assign amuk twrisina main fucntion da reflect laknabani head se pass by value oinabina, natradi fucntion sigi manungda twba thbk mymdo main fn da reflect twrakaroi;
+                break; // sigi break se ywdradi mathnda makhagi sisu call twgrani adunani hapise
             case 2:
                 printf("Available Seats: \n");
-                displayAvailableSeats(seats);
+                displayAvailableSeats(seats); //chp manei sisu
                 break;
             case 3:
-                head = cancelReservation(seats, head);
+                head = cancelReservation(seats, head); //sisu
                 break;
             case 4:
-                displayAllReservations(head);
+                displayAllReservations(head); //sisu
                 break;
             case 5:
-                displayMyReservation(head);
+                displayMyReservation(head); //sisu
                 break;
             case 6:
-                printf("Exiting Program.\n");
+                printf("Exiting Program.\n"); // sina user duna 6 khnlabanina loire 
                 break;
             default:
-                printf("Invalid choice. Please try again.\n");
+                printf("Invalid choice. Please try again.\n"); //sina sono chuba minaga 8 kumba khnlakanda Invalid choice hainaba;
         }
     }
 }
@@ -252,18 +252,18 @@ int main() {
     int* seats = (int*)calloc(CAPACITY, sizeof(int)); // I use calloc because it automatically initializes every element with zero
     ReservationNode* head = NULL;
 
-    displayHeader();
-    displayMenu(seats, head);
+    displayHeader(); //header fucntion ngasai declare twgibadi call twba 
+    displayMenu(seats, head); // siu display menu call twba eina seats masing ga head haidi ahanba linked list ta point twdoriba pointer ga pass twre
 
     // Free the linked list
-    ReservationNode* current = head;
-    while (current != NULL) {
-        ReservationNode* next = current->next;
-        free(current);
-        current = next;
-    }
+    // ReservationNode* current = head;
+    // while (current != NULL) {
+    //     ReservationNode* next = current->next;
+    //     free(current);
+    //     current = next;
+    // }
 
-    free(seats);
+    free(seats); //sina konna sijinaba loiraga eina allocate twgiba memory do clean twba
     printf("\nFeel free to contact");
     return 0;
 }
