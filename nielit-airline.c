@@ -8,7 +8,7 @@ const int CAPACITY = 102;
 typedef struct Passenger {
     char name[50];
     char email[50];
-    char password[10];
+    char password[20];
     char destination[20];
     char seatNumber[3]; // e.g., "A1", "B2", size three because I need to store null terminator
 } Passenger;
@@ -57,7 +57,7 @@ int seatNoValidation(char* seatNumber, int* seats) {
     char row = seatNumber[0];
     char col = seatNumber[1];
 
-    if (!(row >= 'A' && row <= 'R' && col >= '1' && col <= '6')) {
+    if (!(row >= 'A' && row <= 'Q' && col >= '1' && col <= '6')) {
         printf("Invalid seat number! Row must be between A and R, and column between 1 and 6.\n");
         return 0;
     }
@@ -118,10 +118,48 @@ ReservationNode* registerPassenger(int* seats, ReservationNode* head) {
     return head;
 }
 
-// Function to cancel the reservation =========
-void cancelReservation(int* seats, ReservationNode** head) {
-    // printf("No reservation found for seat.\n");
-    printf("Cancelled");
+// Function to cancel the reservation =======================
+ReservationNode* cancelReservation(int* seats, ReservationNode* head) {
+    char email[50]; 
+    char password[20];
+
+    printf("Enter your Email: ");
+    scanf("%s", email);
+    printf("Enter your Password: ");
+    scanf("%s", password);
+
+    if(head == NULL) {
+        printf("No reservations found.\n");
+        return head;
+    }
+
+    ReservationNode *temp = head;
+    ReservationNode *prev = NULL;
+
+    while(temp != NULL) {
+        if(strcmp(temp->passenger.email, email) == 0 && strcmp(temp->passenger.password, password) == 0) {
+            char row = temp->passenger.seatNumber[0];
+            int rowIndex = row - 'A';
+            int colIndex = temp->passenger.seatNumber[1] - '1';
+            int seatIndex = rowIndex * 6 + colIndex;
+            seats[seatIndex] = 0;
+            if (prev == NULL) {
+                // We are deleting the head node; update head
+                head = temp->next;
+            } else {
+                // Bypass the current node
+                prev->next = temp->next;
+            }
+            free(temp); // Free memory allocated for the reservation
+            printf("Reservation cancelled successfully!\n");
+            return head;
+        }
+
+        prev = temp;
+        temp = temp->next;
+    }
+    printf("No reservation found with the given email and password.\n");
+    return head;
 }
 
 void displayAllReservations(ReservationNode* head) {
@@ -141,7 +179,31 @@ void displayAllReservations(ReservationNode* head) {
 }
 
 void displayMyReservation(ReservationNode* head) {
-    printf("My Reservations\n");
+    char email[50];
+    char password[20];
+
+    printf("Enter your Email: ");
+    scanf("%s", email);
+
+    printf("Enter your password: ");
+    scanf("%s", password);
+
+    ReservationNode *current = head;
+    int found = 0;
+
+    while(current != NULL) {
+        if(strcmp(current->passenger.email, email) == 0 && strcmp(current->passenger.password, password) == 0) {
+            printf("Reservation found:\n");
+            printf("Name: %s\n", current->passenger.name);
+            printf("Seat: %s\n", current->passenger.seatNumber);
+            printf("Destination: %s\n", current->passenger.destination);
+            found = 1;
+        }
+        current = current->next;
+    }
+    if(!found) {
+        printf("No reservation found with the given email and password.\n");
+    }
 }
 
 // Function to display the menu and choose ==========================
@@ -169,7 +231,7 @@ void displayMenu(int* seats, ReservationNode* head) {
                 displayAvailableSeats(seats);
                 break;
             case 3:
-                cancelReservation(seats, &head);
+                head = cancelReservation(seats, head);
                 break;
             case 4:
                 displayAllReservations(head);
