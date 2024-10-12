@@ -47,30 +47,32 @@ void displayAvailableSeats(int* seats) {
     }
 }
 
-// Function to check if the entered seat is either valid or taken
+// si fucntion sina user duna enter twrakiba seat to valid oiba oidaba yengnaba//
 int seatNoValidation(char* seatNumber, int* seats) {
-    if (strlen(seatNumber) != 2) {
+    if (strlen(seatNumber) != 2) { // sina keigumba user duna "A11" gumba seat no ga enter twrakadi na check twba, twrakagana reenter twhndoine, "A" kaina namamasu
         printf("Invalid seat number format! Please enter in the format of A1, B1 etc.\n");
         return 0;
     }
 
-    char row = seatNumber[0];
-    char col = seatNumber[1];
+    char row = seatNumber[0];// row no khangdokiba eg:'A'
+    char col = seatNumber[1];// col no khangdokiba eg:'1'
 
-    if (!(row >= 'A' && row <= 'Q' && col >= '1' && col <= '6')) {
+    if (!(row >= 'A' && row <= 'Q' && col >= '1' && col <= '6')) { //sina keigumba user duna row A dagi Q buk namdabida Z2, T6 kaina namamadi error pinaba , col no su '1' dagi '6' buk natana thok mok twramadi error //
         printf("Invalid seat number! Row must be between A and R, and column between 1 and 6.\n");
         return 0;
     }
 
-    int rowIndex = row - 'A';
-    int colIndex = col - '1';
-    int seatIndex = rowIndex * 6 + colIndex;
+    int rowIndex = row - 'A'; // sina row gi index khngdoknaba, haidi eikhoina A B na haijarasu moinadi 0, 1, 2 oina khngnini aduna rowIndex sina eikhoi 0 da leibra 1 da leibradu khngdokini, e.g(A - 'A' = 0, B-'A' = 1) sinida
+    int colIndex = col - '1'; // sisu col index khngdokiba e.g('1' - '1' = '0' ) string niko 1 se aduna '1' ga 1 ga manade, sigi '1' sigi value di 49 ni; 0 na 48 ni
+    int seatIndex = rowIndex * 6 + colIndex; // sina hwjik user na  book twriba seat tugi index khangdokiba e.g (keigumba user duna A1 khanlamadi sini twduise -> 0 * 6 + 0 = 0)
 
-    if (seats[seatIndex] == 1) {
+    if (seats[seatIndex] == 1) {  // sina keigumba seat ki value do 1 oiramaba , 1 oiradi mina hanna book twgiba oibanina error throw twrani
         printf("Sorry, seat %s is already taken. Please choose another seat.\n", seatNumber);
-        return 0;  // Invalid
+        return 0;  // 0 haisina false , invalid hairiba
     }
-    return 1; // Valid
+    return 1; // 1 haisina true, valid oire
+
+    //ngasaigi restration twbagido sigi fucntion sida depend twriniko, sina false oibeine seat no do amukka nammo twrakido,  
 }
 
 // Function to register user ================================
