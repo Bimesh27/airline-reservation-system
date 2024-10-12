@@ -194,20 +194,20 @@ void displayMyReservation(ReservationNode* head) {
     printf("Enter your password: ");
     scanf("%s", password);
 
-    ReservationNode *current = head;
-    int found = 0;
+    ReservationNode *current = head; // sina current kwba pointer ama semme aduga head assign twre, maramdi current sina linkedList amam amam changaga thidoininna, makoktagi thinaba
+    int found = 0; 
 
-    while(current != NULL) {
-        if(strcmp(current->passenger.email, email) == 0 && strcmp(current->passenger.password, password) == 0) {
+    while(current != NULL) { // sina current se NULL oidribuk haidi , linkedList leiribuk, loidribuk
+        if(strcmp(current->passenger.email, email) == 0 && strcmp(current->passenger.password, password) == 0) { // sina compare twrine "strcmp" sijinaraga, passengerdugi email, password duga user duna input twriba email, pass duga == 0 haisina manare hairini, keigumba manaragadi phangge print twrani
             printf("Reservation found:\n");
             printf("Name: %s\n", current->passenger.name);
             printf("Seat: %s\n", current->passenger.seatNumber);
             printf("Destination: %s\n", current->passenger.destination);
-            found = 1;
+            found = 1; // sina found se 1 haidi phangbanina
         }
-        current = current->next;
+        current = current->next; // sina linkedList ama dagi ama da ctpagi mathw twrine while loop ki conditionse loidribuk natraga if condition se phngdribuk
     }
-    if(!found) {
+    if(!found) { // keigumba found se 0 oiradi haini !found haise , phngdre print twrani
         printf("No reservation found with the given email and password.\n");
     }
 }
