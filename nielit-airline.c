@@ -34,7 +34,7 @@ void displayAvailableSeats(int* seats) {
     printf("------------------------\n");
     for (int i = 0; i < CAPACITY; i++) { // sina seat mymdo print twnaba loop chatlaga oina twre, heitrasu heiba manaba, loop se capacity buk ne run twdoise haidi 102 seats masingdo
         char row = 'A' + (i / 6);  //aduga sina row no do update twnana A gi value se 65 neba integer dadi 66 hek yabada B ondoine adunane i / 6 haise, eg. oins hairabada ahanbada i se 1 ne na khallo 1/6 ti 0.45 ra keinoma taramni adubu int oiba nina 0 oina lwni aduga i sina 6 hek oibada 1+ twraga B ondoine
-        int col = (i % 6) + 1;     // sigi co gise kok kharadi ngaobne haidi i se 0 nena twro 0 % 6 ti 1 tai , formuladune "remainder=dividend−(divisor×quotient)" sigi formula se paliniko
+        int col = (i % 6) + 1;     // sigi col gise kok kharadi ngaobne haidi i se 0 nena lwro 0 % 6 ti 1 tai , formuladune "remainder=dividend−(divisor×quotient)" sigi formula se paliniko
 
         if (seats[i] == 0) { // sina seat he hangbra yengine ahanbada seats loinabkki value se 0 loi lei, marmdi eina main fucntion da calloc sijinaraga memory allocate twbanina, calloc sizinaradi 0 da initialized loi twdoine, 0 leiraga hangge, 1 keigumba leiradi mina book twgre hangdre hairini
             printf(" %c%d ", row, col); //sina seat printtwba c sina A(row), d sina(col);
@@ -75,7 +75,7 @@ int seatNoValidation(char* seatNumber, int* seats) {
 
 // Function to register user ================================
 ReservationNode* registerPassenger(int* seats, ReservationNode* head) {
-    Passenger newPassenger;
+    Passenger newPassenger; //sina passenger instances ama semme, semmi maramsina sigi stucture sini linked list ta store twduise; 
     printf("Enter Name: ");
     scanf("%s", newPassenger.name);
 
@@ -91,31 +91,35 @@ ReservationNode* registerPassenger(int* seats, ReservationNode* head) {
     do {
         printf("Enter Seat Number (e.g., A1): ");
         scanf("%s", newPassenger.seatNumber);
-    } while (!seatNoValidation(newPassenger.seatNumber, seats));
+    } while (!seatNoValidation(newPassenger.seatNumber, seats)); // sigi do while sina twduisina sono chuba mi khrana seats masing lanna namba check twrini lanna ngamingei adum hangduine 
 
-    char row = newPassenger.seatNumber[0];
-    char col = newPassenger.seatNumber[1];
-    int rowIndex = row - 'A';
-    int colIndex = col - '1';
-    int seatIndex = rowIndex * 6 + colIndex;
+    char row = newPassenger.seatNumber[0]; // sina row kaya subanodo yengine
+    char col = newPassenger.seatNumber[1]; // sina col kaya subanodo yengiba
+    int rowIndex = row - 'A'; // sina row gi index khngdoknaba, haidi eikhoina A B na haijarasu moinadi 0, 1, 2 oina khngnini aduna rowIndex sina eikhoi 0 da leibra 1 da leibradu khngdokini, e.g(A - 'A' = 0, B-'A' = 1) sinida 
+    int colIndex = col - '1'; //sisu col index khngdokiba e.g('1' - '1' = '0' ) string niko 1 se aduna '1' ga 1 ga manade, sigi '1' sigi value di 49 ni; 0 na 48 ni
+    int seatIndex = rowIndex * 6 + colIndex;  // sina hwjik user na  book twriba seat tugi index khangdokiba e.g (keigumba user duna A1 khanlamadi sini twduise -> 0 * 6 + 0 = 0)
 
-    seats[seatIndex] = 1; // Mark the seat as taken
+    seats[seatIndex] = 1; //sina khanlakiba seat ki value do 1 oihnle haidi , seat se book twgrabanina -> seat[0] = 1; haigumbni;
 
-    ReservationNode* newNode = (ReservationNode*)malloc(sizeof(ReservationNode));
-    newNode->passenger = newPassenger;
-    newNode->next = NULL;
+    //*************************************************************************//
+    //asengbadi ym laigadbni eina A1 B2 kaina seat to display twrubaduna khra lugre, haidi rowIndex colIndex, seatIndex kase amabuk changdrasu yabni, marmdi A1 A2 kaina twbasina row col kaina thokhnle 1, 2, 3 khk oina twramadi direct seats[seatsIndex] kaina twba yarmbasu yai;
+    //*************************************************************************//
+
+    ReservationNode* newNode = (ReservationNode*)malloc(sizeof(ReservationNode)); //sina linkedList ama semme, Hwjik register twgiba user do store twnaba, malloc sina memory allocate twrini memory gi size sina Reservation node ki size oidoiba;
+    newNode->passenger = newPassenger; // sina haisina newNode ki passenger struct tuda newPassenger gi value do assign twro haini
+    newNode->next = NULL; // sina next ti NULL oiro haidi mathngi linked List tudi sembra semdriba khngdabanina NULL thamme, register twrakangda next se register twriba list tugi memory location ne tungsinsuine
 
     if (head == NULL) {
-        head = newNode; // First passenger
-    } else {
-        ReservationNode* temp = head;
-        while (temp->next != NULL) {
-            temp = temp->next; // Traverse to the end
+        head = newNode; // kewmta ntte sisidi, keigumba head pointer do NULL oiramadi haidi, linked list amatada point twrmdradi, eikhoina hwjik semiba linkedList sina ahanba oiyo natraga head sina newNode sida point twro haini, head sidi LinkedList tugi ahanba node tuda point twba pointer niko
+    } else { // mathki condition se lallamadi haiba
+        ReservationNode* temp = head; // temp kwba node ama create twre aduga head se assign twsille, twrise twba yadbeine head na loop ctpa yade, marmdi head to ahanba linked list tuda point twgdbani, twdradi linkedList loinki track loinamk mangani
+        while (temp->next != NULL) { // sina hairina temp(head) ki next to NULL ga manadribuk ctuine
+            temp = temp->next; // sina linkedList amadagi amada ctliba aduga next to NULL oiba thiriba, haidi khwai aroiba,
         }
-        temp->next = newNode; // Append to the end
+        temp->next = newNode; // aduga sina khwai aroiba linkedList tugi next ta hwjik register twgriba nodetugi location to ne assign twrise;
     }
-    printf("Passenger registered successfully! Seat %s is reserved.\n", newPassenger.seatNumber);
-    return head;
+    printf("Passenger registered successfully! Seat %s is reserved.\n", newPassenger.seatNumber); 
+    return head; //sina head to return twrakiba twdradi main fucntion da effect lajoi adunne twrise twningdanaga twba ntte 🤣;
 }
 
 // Function to cancel the reservation =======================
@@ -250,10 +254,10 @@ void displayMenu(int* seats, ReservationNode* head) {
 
 int main() {
     int* seats = (int*)calloc(CAPACITY, sizeof(int)); // I use calloc because it automatically initializes every element with zero
-    ReservationNode* head = NULL;
+    ReservationNode* head = NULL; // sina head kwba pointer ama declare twre ahanbada NUll oihnlle, haidi kanamatada point twdri haiba;
 
     displayHeader(); //header fucntion ngasai declare twgibadi call twba 
-    displayMenu(seats, head); // siu display menu call twba eina seats masing ga head haidi ahanba linked list ta point twdoriba pointer ga pass twre
+    displayMenu(seats, head); // siu display menu call twba eina seats masing ga head haidi ahanba linked list ta point twdoriba pointer ga pass twre, pass by value niko aduna return twradi yaroi
 
     // Free the linked list
     // ReservationNode* current = head;
