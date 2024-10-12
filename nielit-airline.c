@@ -134,53 +134,52 @@ ReservationNode* cancelReservation(int* seats, ReservationNode* head) {
     printf("Enter your Password: ");
     scanf("%s", password);
 
-    if(head == NULL) {
+    if(head == NULL) { 
         printf("No reservations found.\n");
         return head;
     }
 
-    ReservationNode *temp = head;
-    ReservationNode *prev = NULL;
+    ReservationNode *temp = head; // temp haiba ama declare twre aduga head ta point twre, assign twrise point twre hairini
+    ReservationNode *prev = NULL; // sisu chp manei sina null ogiba wani
 
-    while(temp != NULL) {
-        if(strcmp(temp->passenger.email, email) == 0 && strcmp(temp->passenger.password, password) == 0) {
-            char row = temp->passenger.seatNumber[0];
-            int rowIndex = row - 'A';
-            int colIndex = temp->passenger.seatNumber[1] - '1';
-            int seatIndex = rowIndex * 6 + colIndex;
-            seats[seatIndex] = 0;
-            if (prev == NULL) {
-                // We are deleting the head node; update head
+    while(temp != NULL) { // sisu makoktagi loidribuk ctuini
+        if(strcmp(temp->passenger.email, email) == 0 && strcmp(temp->passenger.password, password) == 0) { // keigumba eikhoina cancel twge twbada enter twrakiba details mymdo chumamadi si f condition se twduini
+            char row = temp->passenger.seatNumber[0]; // sina seat no gi row khngdokke A, ra B ra C ra haibdo
+            int rowIndex = row - 'A'; // sina row index khngdokke 
+            int colIndex = temp->passenger.seatNumber[1] - '1'; // sisuni seat no gi col no khngdoke
+            int seatIndex = rowIndex * 6 + colIndex; // index puthoke khandokaga
+            seats[seatIndex] = 0; // aduga ngasai eikhoina register twgibada 1 oina assign twgibdo hwjikti cancel twrabanina 0 oina amuk assign twre;
+            if (prev == NULL) { // keigumba prev to null oiramaba , NULL oiramadi eihkoiba cancel twdoribase head oidoineba (prev = temp;) sina maram oiraga aduna head se mathangi list to oina oihnlle
                 head = temp->next;
-            } else {
-                // Bypass the current node
-                prev->next = temp->next;
+            } else { // oirmdragadi prev tuda hwjiki kakadwribagi next to assign twre, haidi temp sidi hwjik kakidwrabanina magi location gi mathw tadre
+                prev->next = temp->next; 
             }
-            free(temp); // Free memory allocated for the reservation
+            free(temp); // sina temp ti memory do free twba , sijinadrabanina
             printf("Reservation cancelled successfully!\n");
-            return head;
+            return head; // aduga head to return twre main fn da reflext laknaba
         }
 
-        prev = temp;
-        temp = temp->next;
+        prev = temp; // sina loop ctli khudingi temp(head) to prev ta assign twre
+        temp = temp->next; // temp su loop ctli khudingi hwjik leiriba list tugi mathngda ctle
     }
-    printf("No reservation found with the given email and password.\n");
-    return head;
+    printf("No reservation found with the given email and password.\n"); // keigumba phngdradi si print twre
+    return head; // aduga head return twre main fn da refelxt laknaba
 }
 
+//si fucntion sina reservation mymdo show twnaba 
 void displayAllReservations(ReservationNode* head) {
-    if (head == NULL) {
+    if (head == NULL) { // ahanbada head to empty oibra hanna yengani , oiramadi kamaina linkedList leigani aduna print twre leite haina
         printf("No reservations found.\n");
         return;
     }
 
-    ReservationNode* current = head;
-    while (current != NULL) {
+    ReservationNode* current = head; // sina current kwba pointer ama declare twre aduga head assign twre, maramdi ahoubada point twnaba aduga loibabuk ctnaba 
+    while (current != NULL) { // sina current to linedList to NULL haidi loidribuk ctuine aduga data do amam amam print twduine treverse ka hainabdo
         printf("Passenger Name: %s, Seat: %s, Destination: %s\n",
                current->passenger.name,
                current->passenger.seatNumber,
                current->passenger.destination);
-        current = current->next;
+        current = current->next; // sina list ama dagi ama ctpada mateng pangine 
     }
 }
 
