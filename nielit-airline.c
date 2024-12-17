@@ -36,7 +36,7 @@ void displayAvailableSeats(int* seats) {
         char row = 'A' + (i / 6);  //aduga sina row no do update twnana A gi value se 65 neba integer dadi 66 hek yabada B ondoine adunane i / 6 haise, eg. oins hairabada ahanbada i se 1 ne na khallo 1/6 ti 0.45 ra keinoma taramni adubu int oiba nina 0 oina lwni aduga i sina 6 hek oibada 1+ twraga B ondoine
         int col = (i % 6) + 1;     // sigi col gise kok kharadi ngaobne haidi i se 0 nena lwro 0 % 6 ti 1 tai , formuladune "remainder=dividend−(divisor×quotient)" sigi formula se paliniko
 
-        if (seats[i] == 0) { // sina seat he hangbra yengine ahanbada seats loinabkki value se 0 loi lei, marmdi eina main fucntion da calloc sijinaraga memory allocate twbanina, calloc sizinaradi 0 da initialized loi twdoine, 0 leiraga hangge, 1 keigumba leiradi mina book twgre hangdre hairini
+        if (seats[i] == 0) { // sina seat se hangbra yengine ahanbada seats loinabkki value se 0 loi lei, marmdi eina main fucntion da calloc sijinaraga memory allocate twbanina, calloc sizinaradi 0 da initialized loi twdoine, 0 leiraga hangge, 1 keigumba leiradi mina book twgre hangdre hairini
             printf(" %c%d ", row, col); //sina seat printtwba c sina A(row), d sina(col);
         } else {
             printf("  x "); // sina keigumba seat to mina hanna book twramadi x oina print twrakani
@@ -58,7 +58,7 @@ int seatNoValidation(char* seatNumber, int* seats) {
     char col = seatNumber[1];// col no khangdokiba eg:'1'
 
     if (!(row >= 'A' && row <= 'Q' && col >= '1' && col <= '6')) { //sina keigumba user duna row A dagi Q buk namdabida Z2, T6 kaina namamadi error pinaba , col no su '1' dagi '6' buk natana thok mok twramadi error //
-        printf("Invalid seat number! Row must be between A and R, and column between 1 and 6.\n");
+        printf("Invalid seat number! Row must be between A and Q, and column between 1 and 6.\n");
         return 0;
     }
 
@@ -257,7 +257,7 @@ int main() {
     int* seats = (int*)calloc(CAPACITY, sizeof(int)); // I use calloc because it automatically initializes every element with zero
     ReservationNode* head = NULL; // sina head kwba pointer ama declare twre ahanbada NUll oihnlle, haidi kanamatada point twdri haiba;
 
-    displayHeader(); //header fucntion ngasai declare twgibadi call twba 
+    displayHeader(); //header fucntion ngasai declare twgibadu call twba 
     displayMenu(seats, head); // siu display menu call twba eina seats masing ga head haidi ahanba linked list ta point twdoriba pointer ga pass twre, pass by value niko aduna return twradi yaroi
 
     // Free the linked list
